@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -47,8 +48,10 @@ public class SecurityConfig {
                 .sessionManagement(sm->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf->csrf.disable())
                 .cors(Customizer.withDefaults())
+                .requiresChannel(channel -> channel.anyRequest().requiresSecure()) // Enforce HTTPS
                 .authorizeHttpRequests(ar -> ar
                 /////////////////////////////////////////////////////
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/responsables/**").permitAll()
                         // .requestMatchers("/admins/**").permitAll() //added then commented for testing purposes
                         // .requestMatchers("/streams/**").permitAll() //added then commented for testing purposes
@@ -124,14 +127,21 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOriginPattern("*");
-        corsConfiguration.addAllowedMethod("*");
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.setExposedHeaders(List.of("x-auth-token", "Authorization"));
-        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addAllowedOrigin("https://192.168.11.107");  // Allow requests from your frontend
+        corsConfiguration.addAllowedMethod("GET");
+        corsConfiguration.addAllowedMethod("POST");
+        corsConfiguration.addAllowedMethod("PUT");
+        corsConfiguration.addAllowedMethod("DELETE");
+        corsConfiguration.addAllowedMethod("PATCH");
+        corsConfiguration.addAllowedMethod("OPTIONS");  // Ensure OPTIONS method is allowed
+        corsConfiguration.addAllowedHeader("*");  // Allow all headers
+        corsConfiguration.setExposedHeaders(List.of("x-auth-token", "Authorization"));  // Allow these headers to be exposed to the frontend
+        corsConfiguration.setAllowCredentials(true);  // Allow credentials (cookies, authorization headers)
+        
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
 
         return source;
     }
+
 }
