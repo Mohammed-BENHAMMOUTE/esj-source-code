@@ -15,10 +15,11 @@ import FileUploader from "../file-uploader";
 import { getAlertifyInstance } from "@/components/ies/utility/alertify-singleton";
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from "next/navigation";
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 const Live_Planification_Form = ({ toDashboard }) => {
     const [alertify, setAlertify] = useState(null);
+    const env = useEnv()
 
     useEffect(() => {
         const initializeAlertify = async () => {
@@ -144,7 +145,7 @@ const Live_Planification_Form = ({ toDashboard }) => {
             formData.append('image', file);
 
             try {
-                await axios.post(`${SPRINGBOOT_API_URL}/admins/${idAdmin}/streams`, formData, {
+                await axios.post(`${env.SPRINGBOOT_API_URL}/admins/${idAdmin}/streams`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
@@ -175,7 +176,7 @@ const Live_Planification_Form = ({ toDashboard }) => {
                     return;
                 }
 
-                const response = await axios.get(SPRINGBOOT_API_URL+"/responsables", {
+                const response = await axios.get(env.SPRINGBOOT_API_URL+"/responsables", {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

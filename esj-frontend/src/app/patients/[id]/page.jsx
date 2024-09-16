@@ -17,7 +17,7 @@ import {
 } from "@/components/imagepath";
 import {dossier} from "@/assets/json/dumpdata_ppn";
 import jsPDF from "jspdf";
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 export function handleGenerateDocument(){   
   const doc = new jsPDF()
@@ -31,6 +31,7 @@ export function handleGenerateDocument(){
 }
 
 const Patient = ({params}) => {
+  const env = useEnv()
   const id = params.id
   const [patientDetail,setPatientDetail] = useState([])
   const [patient, setPatient] = useState([]);
@@ -43,7 +44,7 @@ const Patient = ({params}) => {
     if (id) {
       const accessToken = localStorage.getItem('access-token');
       const decodedAccessToken = jwtDecode(accessToken);
-      axios.get(SPRINGBOOT_API_URL+"/jeunes/"+id, {
+      axios.get(env.SPRINGBOOT_API_URL+"/jeunes/"+id, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -51,7 +52,7 @@ const Patient = ({params}) => {
         .then(data => {setPatient(data.data);console.log(data.data)})
         .catch(error => console.error('Error fetching patient:', error));
 
-      axios.get(SPRINGBOOT_API_URL+"/jeune/"+id, {
+      axios.get(env.SPRINGBOOT_API_URL+"/jeune/"+id, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

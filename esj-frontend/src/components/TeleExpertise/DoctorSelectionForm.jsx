@@ -5,10 +5,12 @@ import { Select, Input, Form, Dropdown, Menu, Button, Tag } from "antd";
 import { SearchOutlined, DownOutlined } from "@ant-design/icons";
 import { getAllMedecins } from "@/services/medecinService";
 import { decodeToken } from "@/utils/docodeToken";
+import { useEnv } from "@/env/provider";
 
 const { Option } = Select;
 
 const DoctorSelectionForm = ( {selectedDoctors, setSelectedDoctors, selectedConsultedDoctor, setSelectedConsultedDoctor, isPrivee} ) => {
+  const env = useEnv()
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpeciality, setSelectedSpeciality] = useState("");
   const [searchTermConsulted, setSearchTermConsulted] = useState("");
@@ -22,7 +24,7 @@ const DoctorSelectionForm = ( {selectedDoctors, setSelectedDoctors, selectedCons
         const decodedToken = decodeToken(token);
         const userId = decodedToken.claims.id;
 
-        const res = await getAllMedecins(token);
+        const res = await getAllMedecins(token, env);
         const data = res
             .filter((doctor) => doctor.id !== userId)
             .map((doctor) => ({

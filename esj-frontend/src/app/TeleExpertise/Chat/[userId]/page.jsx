@@ -7,23 +7,13 @@ import Link from "next/link";
 import FeatherIcon from "feather-icons-react/build/FeatherIcon";
 import ChatSideContent from "@/components/TeleExpertise/ChatSideContent";
 import Conversation from "@/components/TeleExpertise/Conversation";
-import {
-  Avatar1,
-  Avatar3,
-  Avatar2,
-  Avatar5,
-  chaticon4,
-  chaticon5,
-  chaticon6,
-  chaticon8,
-} from "@/components/TeleExpertise/imagepath";
 import { useWebSocket } from "@/hooks/useWebSocket";
-import axios from "axios";
 import { decodeToken } from "@/utils/docodeToken";
 import { getMessages } from "@/services/chatService";
 import { format } from "date-fns";
 import { getMedecinById } from "@/services/medecinService";
 import { useRouter } from "next/navigation";
+import { useEnv } from "@/env/provider";
 
 const Page = ({ params }) => {
   const [messages, setMessages] = useState([])
@@ -31,6 +21,7 @@ const Page = ({ params }) => {
   const { connect, isConnected, stompClient } = useWebSocket()
   const [otherUser, setOtherUser] = useState({})
   const router = useRouter()
+  const env = useEnv()
 
   useEffect(() => {
     const token = localStorage.getItem("access-token")
@@ -49,8 +40,8 @@ const Page = ({ params }) => {
     const decodedToken = decodeToken(token)
     async function fetchData() {
       try {
-        const res = await getMessages(token, decodedToken.claims.id, params.userId)
-        const other = await getMedecinById(token, params.userId)
+        const res = await getMessages(token, decodedToken.claims.id, params.userId, env)
+        const other = await getMedecinById(token, params.userId, env)
         setMessages(res.map(message => ({
           ...message,
           type: message.senderId === decodedToken.claims.id ? "sent" : "received",
@@ -59,7 +50,7 @@ const Page = ({ params }) => {
           name: message.senderId === decodedToken.claims.id ? decodedToken.claims.nom + " " + decodedToken.claims.prenom : other.nom + " " + other.prenom,
           attachments: []
         })))
-        setOtherUser(await getMedecinById(token, params.userId))
+        setOtherUser(await getMedecinById(token, params.userId, env))
         connect(token)
       } catch (error) {
         router.push("/TeleExpertise/Chat")

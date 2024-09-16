@@ -13,9 +13,9 @@ import Input from './Input';
 import axios from 'axios';
 import Header from '../espaceMedecin/Header';
 import Sidebar from '../espaceMedecin/Sidebar1';
-import { FLASK_API_URL } from '@/config';
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from "next/navigation";
+import { useEnv } from '@/env/provider';
 
 const Chat = () => {
     const greetings = {
@@ -27,6 +27,7 @@ const Chat = () => {
     const [token , setToken] = useState(null);
     const messagesEndRef = useRef(null);
     const router = useRouter();
+    const env = useEnv()
 
     useEffect(() => {
         scrollToBottom();
@@ -62,7 +63,7 @@ const Chat = () => {
             ]);
 
             try {
-                const response = await axios.post(FLASK_API_URL+'/chatbot/ask', {
+                const response = await axios.post(env.FLASK_API_URL+'/chatbot/ask', {
                     message: message,
                 }, {
                     headers: {

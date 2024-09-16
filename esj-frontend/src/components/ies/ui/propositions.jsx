@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
 import Loading from "../utility/loading";
 import axios from "axios";
-import { EXPRESS_API_URL, SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 /*
 const sampleData = [
@@ -72,6 +72,7 @@ const sortCategoriesByLongestTopic = (categories) => {
 };
 
 const Propositions = ({ toDashboard }) => {
+    const env = useEnv()
     const [fetched, setFetched] = useState(false);
     const [data, setData] = useState([]);
     const [dataFetched, setDataFetched] = useState(false);
@@ -98,7 +99,7 @@ const Propositions = ({ toDashboard }) => {
                     return;
                 }
 
-                const allLives = await axios.get(`${SPRINGBOOT_API_URL}/admins/${id}/streams?phase=`, {
+                const allLives = await axios.get(`${env.SPRINGBOOT_API_URL}/admins/${id}/streams?phase=`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -108,7 +109,7 @@ const Propositions = ({ toDashboard }) => {
                 const fetchSuggestedThemes = async () => {
                     const themesPromises = lives.map(async (live) => {
                         try {
-                            const response = await axios.get(`${SPRINGBOOT_API_URL}/streams/${live.id}/suggestedThemes`, {
+                            const response = await axios.get(`${env.SPRINGBOOT_API_URL}/streams/${live.id}/suggestedThemes`, {
                                 headers: {
                                     Authorization: `Bearer ${token}`
                                 }
@@ -133,7 +134,7 @@ const Propositions = ({ toDashboard }) => {
 
                     if (topics !== null && topics !== undefined) {
                         const response = await axios.post(
-                            EXPRESS_API_URL+'/summarized_topics',
+                            env.EXPRESS_API_URL+'/summarized_topics',
                             { topics },
                             {
                                 headers: {

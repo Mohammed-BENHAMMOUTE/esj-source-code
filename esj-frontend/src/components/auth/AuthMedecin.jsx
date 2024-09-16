@@ -28,12 +28,12 @@ import { useTranslations } from "next-intl";
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
 import { LanguageSelector2 } from '../LanguageSelector2';
-import { SPRINGBOOT_API_URL } from '@/config';
+import { useEnv } from '@/env/provider';
 
 const AuthMedecin = () => {
     const t = useTranslations("AuthMedecins");
     const router=useRouter();
-
+    const env = useEnv()
     const [token, setToken] = useState({});
     const [accesToken, setAccesToken] = useState('');
 
@@ -57,7 +57,7 @@ const AuthMedecin = () => {
 
     const onSubmit = (data) => {
 
-        fetch(SPRINGBOOT_API_URL+'/auth/login/medecins', {
+        fetch(env.SPRINGBOOT_API_URL+'/auth/login/medecins', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -111,7 +111,7 @@ const AuthMedecin = () => {
         console.log("***************");
         console.log(accesToken);
         console.log("***************");
-        fetch(`${SPRINGBOOT_API_URL}/medecins/${token.id}`, {
+        fetch(`${env.SPRINGBOOT_API_URL}/medecins/${token.id}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
@@ -133,7 +133,7 @@ const AuthMedecin = () => {
         router.push('/espaceMedecin');
     }
     const envoyerEmail = () => {
-        fetch(SPRINGBOOT_API_URL+'/register/resend-token?email='+token.mail, {
+        fetch(env.SPRINGBOOT_API_URL+'/register/resend-token?email='+token.mail, {
             method: 'POST'
           }).then(response => {
             if (!response.ok) {

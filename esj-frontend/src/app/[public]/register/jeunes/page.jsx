@@ -10,9 +10,10 @@ import PasswordForm from '@/components/auth/register/PasswordForm';
 import Recapitulatif from '@/components/auth/register/Recapitulatif';
 import Confirmation from '@/components/auth/register/Confirmation';
 import CinForm from '@/components/auth/register/CinForm';
-import { SPRINGBOOT_API_URL } from '@/config';
+import { useEnv } from '@/env/provider';
 
 const MultiStepForm = () => {
+  const env = useEnv()
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     nom: '',
@@ -61,7 +62,7 @@ const MultiStepForm = () => {
     }
 
     console.log(data);
-      fetch(SPRINGBOOT_API_URL+'/register/jeunes/'+scolaris, {
+      fetch(env.SPRINGBOOT_API_URL+'/register/jeunes/'+scolaris, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

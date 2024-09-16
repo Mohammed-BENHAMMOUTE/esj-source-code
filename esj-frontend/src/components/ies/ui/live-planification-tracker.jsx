@@ -5,7 +5,7 @@ import axios from 'axios';
 import Loading from '../utility/loading';
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
-import { SPRINGBOOT_API_URL } from '@/config';
+import { useEnv } from '@/env/provider';
 
 const liveItems = [
     { title: 'Introduction à la Télémédecine 3', planificationDate: '2024-12-15T10:00:00' },
@@ -39,7 +39,7 @@ export function sortByDate(list, reverse = false) {
 }
 
 const Live_Planification_Tracker = ({ showModifyLivePlanification, setStatus, isItForAdmin, showAskQuestion }) => {
-
+    const env = useEnv()
     const [notActivatedPhase, setNotActivatedPhase] = useState([])
     const [questionPhase, setQuestionPhase] = useState([])
     const [finalPhase, setFinalPhase] = useState([])
@@ -60,9 +60,9 @@ const Live_Planification_Tracker = ({ showModifyLivePlanification, setStatus, is
                 const id = decodedToken.claims.id;
 
                 if (isItForAdmin) {
-                    const response1 = await axios(`${SPRINGBOOT_API_URL}/admins/${id}/streams?phase=notactivated`)
-                    const response2 = await axios(`${SPRINGBOOT_API_URL}/admins/${id}/streams?phase=question`)
-                    const response3 = await axios(`${SPRINGBOOT_API_URL}/admins/${id}/streams?phase=final`)
+                    const response1 = await axios(`${env.SPRINGBOOT_API_URL}/admins/${id}/streams?phase=notactivated`)
+                    const response2 = await axios(`${env.SPRINGBOOT_API_URL}/admins/${id}/streams?phase=question`)
+                    const response3 = await axios(`${env.SPRINGBOOT_API_URL}/admins/${id}/streams?phase=final`)
                     const phase1 = await response1.data;
                     const phase2 = await response2.data;
                     const phase3 = await response3.data;
@@ -70,8 +70,8 @@ const Live_Planification_Tracker = ({ showModifyLivePlanification, setStatus, is
                     setQuestionPhase(sortByDate(phase2));
                     setFinalPhase(sortByDate(phase3));
                 } else {
-                    const response1 = await axios(`${SPRINGBOOT_API_URL}/jeunes/${id}/streams?phase=question`)
-                    const response2 = await axios(`${SPRINGBOOT_API_URL}/jeunes/${id}/streams?phase=final`)
+                    const response1 = await axios(`${env.SPRINGBOOT_API_URL}/jeunes/${id}/streams?phase=question`)
+                    const response2 = await axios(`${env.SPRINGBOOT_API_URL}/jeunes/${id}/streams?phase=final`)
                     const phase1 = await response1.data;
                     const phase2 = await response2.data;
                     setQuestionPhase(sortByDate(phase1));

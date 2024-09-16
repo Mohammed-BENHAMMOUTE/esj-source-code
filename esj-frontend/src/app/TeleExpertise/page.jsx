@@ -12,8 +12,10 @@ import { format } from 'date-fns';
 import Discussion from "@/components/TeleExpertise/Discussion";
 import { decodeToken } from "@/utils/docodeToken";
 import { getOuverteDiscussion } from "@/services/discussionService";
+import { useEnv } from "@/env/provider";
 
 const Home = () => {
+  const env = useEnv()
   const router = useRouter();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [name, setName] = useState("")
@@ -30,7 +32,7 @@ const Home = () => {
       const decodedToken = decodeToken(token)
       setName(decodedToken.claims.nom+ " " + decodedToken.claims.prenom)
       setUserId(decodedToken.claims.id)
-      const data = await getOuverteDiscussion(token)
+      const data = await getOuverteDiscussion(token, env)
       setDiscussions(data)
     }
     fetchData()

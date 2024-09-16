@@ -10,10 +10,11 @@ import MaladiesChirurgicaux from '@/components/auth/firstLogin/MaladiesChirurgic
 import MaladiesChroniques from '@/components/auth/firstLogin/MaladiesChroniques';
 import Medicaments from '@/components/auth/firstLogin/Medicaments';
 import { jwtDecode } from 'jwt-decode';
-import { SPRINGBOOT_API_URL } from '@/config';
+import { useEnv } from '@/env/provider';
 
 
 const MultiStepFirstLogin = () => {
+  const env = useEnv()
   const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -42,7 +43,7 @@ const MultiStepFirstLogin = () => {
     
     const {formData,antecedentFamiliale}=values;
 
-    const requeteAntecedentsFamiliaux =fetch(`${SPRINGBOOT_API_URL}/jeunes/${idJeune}/antecedentsFamiliaux`, {
+    const requeteAntecedentsFamiliaux =fetch(`${env.SPRINGBOOT_API_URL}/jeunes/${idJeune}/antecedentsFamiliaux`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,7 +55,7 @@ const MultiStepFirstLogin = () => {
       }),
     })
 
-    const requeteAntecedentsPersonnels =fetch(`${SPRINGBOOT_API_URL}/jeunes/${idJeune}/antecedentsPersonnels`, {
+    const requeteAntecedentsPersonnels =fetch(`${env.SPRINGBOOT_API_URL}/jeunes/${idJeune}/antecedentsPersonnels`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -82,7 +83,7 @@ const MultiStepFirstLogin = () => {
       const allResponsesOk = responses.every(response => response.ok);
 
       if (allResponsesOk) {
-        return fetch(`${SPRINGBOOT_API_URL}/jeunes/${idJeune}`, {
+        return fetch(`${env.SPRINGBOOT_API_URL}/jeunes/${idJeune}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',

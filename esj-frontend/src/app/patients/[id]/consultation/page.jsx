@@ -41,10 +41,11 @@ import NavigationHeader from "@/components/ppn/NavigationHeader";//USED TO NAVIG
 import SelectInput from "@/components/ppn/SelectInput";
 import TextAreaInput from "@/components/ppn/TextAreaInput";
 import TextInput from "@/components/ppn/TextInput";
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 
 const Consultation = ({params}) => {
+  const env = useEnv()
   const id = params.id
 
   const pages = ["patients", id, "consultation"];
@@ -75,7 +76,7 @@ const Consultation = ({params}) => {
            // Ensure the token is decoded correctly
           // console.log('Decoded token:', decodedAccessToken);
           
-          axios.get(SPRINGBOOT_API_URL+"/jeunes/"+id, {
+          axios.get(env.SPRINGBOOT_API_URL+"/jeunes/"+id, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
@@ -481,7 +482,7 @@ const Consultation = ({params}) => {
 
     // HERE WHERE THE DATA IS BEEN SENT TO THE END POINT : /jeunes/[id]/consultations
     try {
-      const res = await axios.post(`${SPRINGBOOT_API_URL}/jeunes/${id}/consultations`, consultation);
+      const res = await axios.post(`${env.SPRINGBOOT_API_URL}/jeunes/${id}/consultations`, consultation);
     
       // IF THE RESPONSE IS OK THEN THE DOCTOR IS REDIRECTED TO PATIENTS PAGE
       if (res.status === 200) {

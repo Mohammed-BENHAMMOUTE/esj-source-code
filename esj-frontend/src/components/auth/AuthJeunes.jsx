@@ -31,13 +31,14 @@ import CheckVerifiedEmail from './CheckVerifiedEmail';
 import { useTranslations } from "next-intl";
 import { jwtDecode } from 'jwt-decode';
 import { LanguageSelector2 } from '../LanguageSelector2';
-import { SPRINGBOOT_API_URL } from '@/config';
+import { useEnv } from '@/env/provider';
 
 const AuthJeunes = () => {
     const t = useTranslations("AuthJeunes");
     const [token, setToken] = useState({});
     const [accesToken, setAccesToken] = useState('');
     const router = useRouter();
+    const env = useEnv()
     
     const schema = z.object({
         identifier: z.string().min(1, t("identifierError")),
@@ -58,7 +59,7 @@ const AuthJeunes = () => {
     const alertDialogTriggerRef2 = useRef(null);
 
     const onSubmit = (data) => {
-        fetch(SPRINGBOOT_API_URL+'/auth/login/jeunes', {
+        fetch(env.SPRINGBOOT_API_URL+'/auth/login/jeunes', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -117,7 +118,7 @@ const AuthJeunes = () => {
     }
 
     const envoyerEmail = () => {
-        fetch(SPRINGBOOT_API_URL+'/register/resend-token?email=' + token.mail, {
+        fetch(env.SPRINGBOOT_API_URL+'/register/resend-token?email=' + token.mail, {
             method: 'POST'
         }).then(response => {
             if (!response.ok) {

@@ -10,8 +10,10 @@ import { searchnormal } from "@/components/TeleExpertise/imagepath";
 import Table from "@/components/TeleExpertise/Table";
 import { getAllMedecins } from "@/services/medecinService";
 import { decodeToken } from "@/utils/docodeToken";
+import { useEnv } from "@/env/provider";
 
 const Medecins = () => {
+  const env = useEnv()
   const columns = useMemo(
     () => [
       {
@@ -41,7 +43,7 @@ const Medecins = () => {
       const token = localStorage.getItem("access-token")
       const decodedToken = decodeToken(token)
       try {
-        const res = await getAllMedecins(token)
+        const res = await getAllMedecins(token, env)
         const filteredData = res
           .filter(d => d.id !== decodedToken.claims.id)
           .map(d => ({

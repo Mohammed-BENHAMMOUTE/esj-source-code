@@ -5,6 +5,7 @@ import "../assets/css/style.css";
 import "../assets/css/bootstrap.min.css";
 import "../assets/css/feather.css";
 import "../assets/css/bootstrap.css"
+import { EnvProvider } from "@/env/provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,12 +17,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      
-      <LanguageProvider>
-        <body className={inter.className}>
-          {children}
-        </body>
-      </LanguageProvider>
+      <EnvProvider>
+        <LanguageProvider>
+          <body className={inter.className}>
+            {children}
+          </body>
+        </LanguageProvider>
+      </EnvProvider>
     </html>
   );
 }

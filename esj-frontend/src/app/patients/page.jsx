@@ -10,9 +10,10 @@ import NavigationHeader from "@/components/ppn/NavigationHeader";
 import "@/assets/css/style.css";
 import { plusicon, refreshicon, imagesend, dots, edit, deleteIcon } from "@/components/imagepath";
 import { jwtDecode } from 'jwt-decode';
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 const Patients = () => {
+  const env = useEnv()
   const [query, setQuery] = useState("");
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
@@ -25,7 +26,7 @@ const Patients = () => {
     if (query.trim()) {
       const accessToken = localStorage.getItem('access-token');
       const decodedAccessToken = jwtDecode(accessToken);
-      axios.get(SPRINGBOOT_API_URL+`/jeunes_filter?${query}`, {
+      axios.get(env.SPRINGBOOT_API_URL+`/jeunes_filter?${query}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

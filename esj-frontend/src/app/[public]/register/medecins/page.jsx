@@ -8,11 +8,11 @@ import { useState } from 'react';
 import InformationsMedecin from '@/components/auth/register/InformationsMedecin';
 
 import Confirmation from '@/components/auth/register/Confirmation';
-import { SPRINGBOOT_API_URL } from '@/config';
+import { useEnv } from '@/env/provider';
 
 
 const RegisterMedecinsForm = () => {
-
+  const env = useEnv()
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     nom: '',
@@ -33,7 +33,7 @@ const RegisterMedecinsForm = () => {
   
   const handleSubmit = (values) => {
     console.log('Form Data:', values);
-    fetch(SPRINGBOOT_API_URL+'/register/medecins', {
+    fetch(env.SPRINGBOOT_API_URL+'/register/medecins', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'

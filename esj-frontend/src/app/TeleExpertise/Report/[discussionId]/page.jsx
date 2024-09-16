@@ -11,8 +11,10 @@ import { createCompteRendu, getDiscussion } from "@/services/discussionService";
 import { useRouter } from "next/navigation";
 import { decodeToken } from "@/utils/docodeToken";
 import toast from "react-hot-toast";
+import { useEnv } from "@/env/provider";
 
 const Report = ({ params }) => {
+  const env = useEnv()
   const componentRef = useRef();
   const [caseCreation, setCaseCreation] = useState("lorem ipsum");
   const [caseClosure, setCaseClosure] = useState("lorem ipsum");
@@ -27,7 +29,7 @@ const Report = ({ params }) => {
         const token = localStorage.getItem("access-token")
         const decodedToken = decodeToken(token)
         const userId = decodedToken.claims.id
-        const res = await getDiscussion(token, params.discussionId);
+        const res = await getDiscussion(token, params.discussionId, env);
         
         if(res.status !== "TERMINEE" ) {
           router.push("/TeleExpertise")
@@ -83,7 +85,7 @@ const Report = ({ params }) => {
       discussionId: params.discussionId
     }
     try {
-      await createCompteRendu(token, compteRendu)
+      await createCompteRendu(token, compteRendu, env)
       toast.success("Le compte rendu est crée")
       setIsReportReady(true); 
     } catch (error) {

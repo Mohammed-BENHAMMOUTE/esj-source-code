@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { startDiscussion } from "@/services/discussionService";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useEnv } from "@/env/provider";
 const DiscussionCree = ({
   id,
   title,
@@ -16,6 +17,7 @@ const DiscussionCree = ({
   status,
   type
 }) => {
+  const env = useEnv()
   const router = useRouter();
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
 
@@ -35,7 +37,7 @@ const DiscussionCree = ({
   const launchDiscussion = async () => {
     try {
       const token = localStorage.getItem("access-token")
-      const res = await startDiscussion(token, id)
+      const res = await startDiscussion(token, id, env)
       if(type === "CHAT") {
         router.push(`/TeleExpertise/ChatMeeting/${id}`)
       } else if (type === "APPEL_VIDEO") {

@@ -4,7 +4,7 @@ import Loading from "../utility/loading";
 import dayjs from "dayjs";
 import { sortByDate } from "./live-planification-tracker";
 import { jwtDecode } from 'jwt-decode';
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 function capitalizeFirstLetter(x) {
     return x.charAt(0).toUpperCase() + x.slice(1);
@@ -32,6 +32,7 @@ function getMonthName(monthRank, lang = 'en') {
 }
 
 const Live_Timeline = ({ isItForAdmin }) => {
+    const env = useEnv()
     const [lives, setLives] = useState({});
     const [livesLoaded, setLivesLoaded] = useState(false);
 
@@ -52,13 +53,13 @@ const Live_Timeline = ({ isItForAdmin }) => {
                 let response = null;
                 const idUser = decodedToken.claims.id;
                 if (!isItForAdmin) {
-                    response = await axios.get(`${SPRINGBOOT_API_URL}/admins/${1}/streams?phase=outdated`, {
+                    response = await axios.get(`${env.SPRINGBOOT_API_URL}/admins/${1}/streams?phase=outdated`, {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }
                     });
                 } else {
-                    response = await axios.get(`${SPRINGBOOT_API_URL}/admins/${idUser}/streams?phase=outdated`, {
+                    response = await axios.get(`${env.SPRINGBOOT_API_URL}/admins/${idUser}/streams?phase=outdated`, {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }

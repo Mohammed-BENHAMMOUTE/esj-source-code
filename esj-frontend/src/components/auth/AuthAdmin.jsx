@@ -28,13 +28,14 @@ import CheckVerifiedEmail from "./CheckVerifiedEmail";
 
 import { useTranslations } from "next-intl";
 import { LanguageSelector2 } from "../LanguageSelector2";
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 const AuthAdmin = () => {
   const t = useTranslations("AuthAdmin"); // Admin translation key
   const [token, setToken] = useState({});
   const [accesToken, setAccesToken] = useState('');
   const router = useRouter();
+  const env = useEnv()
 
   // Define validation schema with Zod
   const schema = z.object({
@@ -61,7 +62,7 @@ const AuthAdmin = () => {
   const onSubmit = (data) => {
     console.log("Sending data to API:", data);
   
-    fetch(SPRINGBOOT_API_URL+"/auth/login/administrateurs", {
+    fetch(env.SPRINGBOOT_API_URL+"/auth/login/administrateurs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +94,7 @@ const nextStep = () => {
   router.push('/ies/admin');
 }
 const envoyerEmail = () => {
-  fetch(SPRINGBOOT_API_URL+'/register/resend-token?email='+token.mail, {
+  fetch(env.SPRINGBOOT_API_URL+'/register/resend-token?email='+token.mail, {
       method: 'POST'
     }).then(response => {
       if (!response.ok) {
@@ -113,7 +114,7 @@ const confirmeRules=()=>{
   console.log("***************");
   console.log(accesToken);
   console.log("***************");
-  fetch(`${SPRINGBOOT_API_URL}/administrateurs/${token.id}`, {
+  fetch(`${env.SPRINGBOOT_API_URL}/administrateurs/${token.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

@@ -6,12 +6,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { decodeToken } from "@/utils/docodeToken";
 import { getAllMedecins } from "@/services/medecinService";
+import { useEnv } from "@/env/provider";
 
 const ChatSideContent = ({userId}) => {
   const router = useRouter();
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState(data);
   const [search, setSearch] = useState("");
+  const env = useEnv()
 
   const openConversation = (userId) => {
     router.push(`/TeleExpertise/Chat/${userId}`);
@@ -23,7 +25,7 @@ const ChatSideContent = ({userId}) => {
       const token = localStorage.getItem("access-token")
       const decodedToken = decodeToken(token)
       try {
-        const res = await getAllMedecins(token)
+        const res = await getAllMedecins(token, env)
         const filteredData = res
           .filter(d => d.id !== decodedToken.claims.id)
           .map(d => ({

@@ -12,9 +12,10 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { useTranslations } from 'next-intl';
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 const Fields = ({ setFormData, nextStep, medecin }) => {
+    const env = useEnv()
     const t = useTranslations('InformationsActivites');
     
     const schema = z.object({
@@ -77,7 +78,7 @@ const Fields = ({ setFormData, nextStep, medecin }) => {
             }
 
             if (data.cin) {
-                const response = await fetch(`${SPRINGBOOT_API_URL}/validator/cin?cin=${data.cin}`);
+                const response = await fetch(`${env.SPRINGBOOT_API_URL}/validator/cin?cin=${data.cin}`);
                 
                 if (!response.ok) {
                     form.setError("cin", {
@@ -90,7 +91,7 @@ const Fields = ({ setFormData, nextStep, medecin }) => {
     
             // Fetch validation from backend
             if (data.inpe) {
-                const response = await fetch(`${SPRINGBOOT_API_URL}/validator/inpe?inpe=${data.inpe}`);
+                const response = await fetch(`${env.SPRINGBOOT_API_URL}/validator/inpe?inpe=${data.inpe}`);
                 
                 if (!response.ok) {
                     form.setError("inpe", {

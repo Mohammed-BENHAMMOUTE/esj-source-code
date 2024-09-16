@@ -1,21 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXTwitter, faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import FeatherIcon from "feather-icons-react";
 import Sidebar from "../../../components/espaceMedecin/Sidebar1";
 import { Profileuser, cameraicon } from "../../../components/espaceMedecin/imagepath";
 import "../../../assets/css/style.css";
 import { ToastContainer, toast } from "react-toastify";
-import { Button, Card, Form, Input, Space, Typography } from 'antd';
 import "react-toastify/dist/ReactToastify.css";
 import { jwtDecode } from "jwt-decode";
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 const ModifierProfil = () => {
+  const env = useEnv()
   const router = useRouter();
   const [medecin, setMedecin] = useState(null);
   const [user, setUser] = useState(null);
@@ -61,7 +58,7 @@ const ModifierProfil = () => {
 
   const getMedecinData = (id) => {
     if (id != null) {
-      axios.get(SPRINGBOOT_API_URL+'/medecins/' + id, {
+      axios.get(env.SPRINGBOOT_API_URL+'/medecins/' + id, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -153,7 +150,7 @@ const ModifierProfil = () => {
   const updateMedecin = (id, medecinData) => {
     console.log(medecinData);
     axios.patch(
-      `${SPRINGBOOT_API_URL}/medecins/${id}`,
+      `${env.SPRINGBOOT_API_URL}/medecins/${id}`,
       medecinData,
       {
         headers: {
@@ -200,7 +197,7 @@ const ModifierProfil = () => {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const response = await axios.post(SPRINGBOOT_API_URL+'/upload', formData, {
+      const response = await axios.post(env.SPRINGBOOT_API_URL+'/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`

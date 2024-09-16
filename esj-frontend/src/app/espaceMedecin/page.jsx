@@ -9,10 +9,11 @@ import { useRouter } from 'next/navigation';
 import { Card } from "antd";
 import Live_list from "../../components/espaceMedecin/Live_list";
 import { jwtDecode } from "jwt-decode";
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 
 const Home = () => {
+  const env = useEnv()
   const router = useRouter();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [favoritePatients, setFavoritePatients] = useState(null);
@@ -35,7 +36,7 @@ const Home = () => {
   }, []); 
 
   const getFavoritePatients = (medecinId) => {
-    axios.get(`${SPRINGBOOT_API_URL}/jeune/favorite/${medecinId}`, {
+    axios.get(`${env.SPRINGBOOT_API_URL}/jeune/favorite/${medecinId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

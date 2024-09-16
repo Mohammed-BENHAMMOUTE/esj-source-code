@@ -15,7 +15,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Live_Banner from "../ui/banners/we-live-banner";
 import Loading from "../utility/loading";
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 const tabNames = {
     dashboard: 0,
@@ -24,6 +24,7 @@ const tabNames = {
 };
 
 const Youth_Dashboard = () => {
+    const env = useEnv()
     const [fetched, setFetched] = useState(false);
     const [selectedTab, setSelectedTab] = useState(tabNames.dashboard);
 
@@ -62,7 +63,7 @@ const Youth_Dashboard = () => {
     
                 setName(decodedToken.claims.nom.toUpperCase() + " " + decodedToken.claims.prenom);
     
-                const lastLiveResponse = await axios.get(`${SPRINGBOOT_API_URL}/jeunes/${idJeune}/streams/last`, {
+                const lastLiveResponse = await axios.get(`${env.SPRINGBOOT_API_URL}/jeunes/${idJeune}/streams/last`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -70,7 +71,7 @@ const Youth_Dashboard = () => {
 
                 setLastLive(lastLiveResponse.data);
     
-                const ongoingLiveResponse = await axios.get(`${SPRINGBOOT_API_URL}/streams/ongoing`, {
+                const ongoingLiveResponse = await axios.get(`${env.SPRINGBOOT_API_URL}/streams/ongoing`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

@@ -13,14 +13,12 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { useTranslations } from 'next-intl'; // Adjust import based on your setup
-import { SPRINGBOOT_API_URL } from "@/config";
-
-
-
+import { useTranslations } from 'next-intl';
+import { useEnv } from "@/env/provider";
 
 
 const Fields = ({ setFormData, nextStep }) => {
+  const env = useEnv()
   const t = useTranslations('EmailForm');
   
   const schema = z.object({
@@ -51,7 +49,7 @@ const Fields = ({ setFormData, nextStep }) => {
   const onSubmit = async (data) => {
     try {
         // Fetch validation from backend
-        const response = await fetch(`${SPRINGBOOT_API_URL}/validator/infouser?mail=${data.email}&numTel=${data.tel}`);
+        const response = await fetch(`${env.SPRINGBOOT_API_URL}/validator/infouser?mail=${data.email}&numTel=${data.tel}`);
 
         if (!response.ok) {
             form.setError('email', {

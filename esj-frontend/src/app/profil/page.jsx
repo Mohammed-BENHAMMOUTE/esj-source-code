@@ -16,13 +16,11 @@ import {
   medalicon02,
   callicon1
 } from "@/components/imagepath";
-import {dossier} from "@/assets/json/dumpdata_ppn";
-import jsPDF from "jspdf";
-import { SPRINGBOOT_API_URL } from "@/config";
+
+import { useEnv } from "@/env/provider";
 
 const Profil = () => {
-  
-  
+  const env = useEnv()
   const [patient, setPatient] = useState([]);
   const [patientDetail, setPatientDetail] = useState([]);
   const [id,setId] = useState(-1);
@@ -34,14 +32,14 @@ const Profil = () => {
     const decodedAccessToken = jwtDecode(accessToken);
     setId(decodedAccessToken.claims.id);
 
-    axios.get(SPRINGBOOT_API_URL+"/jeunes/"+decodedAccessToken.claims.id, {
+    axios.get(env.SPRINGBOOT_API_URL+"/jeunes/"+decodedAccessToken.claims.id, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     })
         .then(data => {setPatient(data.data);})
         .catch(error => console.error('Error fetching patient:', error));
-    axios.get(SPRINGBOOT_API_URL+"/jeune/"+decodedAccessToken.claims.id, {
+    axios.get(env.SPRINGBOOT_API_URL+"/jeune/"+decodedAccessToken.claims.id, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

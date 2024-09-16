@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { jwtDecode } from 'jwt-decode';
 import Loading from "../utility/loading";
 import axios from "axios";
-import { EXPRESS_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 /*const doneLives = livesData.filter(event => dayjs(event.Date).add(1, "hours").add(30, "minutes").isBefore(dayjs()));
 const notDoneYetLives = livesData.filter(event => dayjs(event.Date).add(1, "hours").add(30, "minutes").isAfter(dayjs()));*/
@@ -38,6 +38,7 @@ const tabNames = {
 };
 
 const Professional_Dashboard = () => {
+    const env = useEnv()
     const [doneLives, setdoneLives] = useState([])
     const [notDoneYetLives, setDoneYetLive] = useState([]);
     const [selectedTab, setSelectedTab] = useState(tabNames.dashboard);
@@ -51,7 +52,7 @@ const Professional_Dashboard = () => {
 
             if ((questions !== null) && (questions !== undefined)) {
                 const response = await axios.post(
-                    EXPRESS_API_URL+'/summarized_questions',
+                    env.EXPRESS_API_URL+'/summarized_questions',
                     { questions },
                     {
                         headers: {
@@ -71,7 +72,7 @@ const Professional_Dashboard = () => {
         setSelectedTab(tabNames.linkAndQuestions);
     };
     const fetchQuestions = async (token, id) => {
-        const { fetch1, fetch2 } = DATA(token, id);
+        const { fetch1, fetch2 } = DATA(token, id, env);
         const data1 = await fetch1();
         const data2 = await fetch2();
         setDoneYetLive(data1)

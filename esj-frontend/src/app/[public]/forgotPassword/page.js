@@ -4,10 +4,10 @@ import PasswordForm from '@/components/auth/register/PasswordForm';
 import EmailRecovery from '@/components/auth/recoverPassword/EmailRecovery';
 import VerifyToken from '@/components/auth/recoverPassword/VerifyToken';
 import { toast } from 'react-hot-toast';
-import { SPRINGBOOT_API_URL } from '@/config';
+import { useEnv } from '@/env/provider';
 
 const ForgotPassword = () => {
-
+  const env = useEnv()
   const [step, setStep] = useState(1);
   
 
@@ -24,7 +24,7 @@ const ForgotPassword = () => {
   
   const sendPasswordResetToken = (email) => {
 
-    fetch(SPRINGBOOT_API_URL+'/password/forgot', {
+    fetch(env.SPRINGBOOT_API_URL+'/password/forgot', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ const ForgotPassword = () => {
     nextStep();
   }
   const resetPassword = (values) => {
-    fetch(SPRINGBOOT_API_URL+'/password/reset', {
+    fetch(env.SPRINGBOOT_API_URL+'/password/reset', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'

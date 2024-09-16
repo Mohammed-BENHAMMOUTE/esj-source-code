@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { daysForQuestions, daysFoSending, daysBeforeAutoInform } from '@/components/ies/utility/period-delays';
 import dayjs from 'dayjs';
 import axios from 'axios';
-import Live_Planification_Form_Filled from "@/components/ies/ui/forms/live-planification-modify-form";
-import { SPRINGBOOT_API_URL } from '@/config';
+import { useEnv } from '@/env/provider';
 
 
 const getColor = (status) => {
@@ -16,6 +15,7 @@ const getColor = (status) => {
 
 const Live_Tracker_Card = ({ cardkey, item, isItForAdmin, setStatus, showModifyLivePlanification, showAskQuestion, status }) => {
     const [isHidden, setIsHidden] = useState(false);
+    const env = useEnv()
 
     useEffect(() => {
         setStatus(status)
@@ -43,7 +43,7 @@ const Live_Tracker_Card = ({ cardkey, item, isItForAdmin, setStatus, showModifyL
     }
 
     const deleting = async (id) => {
-        await axios.delete(`${SPRINGBOOT_API_URL}/streams/${id}`)
+        await axios.delete(`${env.SPRINGBOOT_API_URL}/streams/${id}`)
     }
 
     const [year, month, day, hour = 0, minute = 0, second = 0] = item.date;
@@ -66,7 +66,7 @@ const Live_Tracker_Card = ({ cardkey, item, isItForAdmin, setStatus, showModifyL
     const activedLive = async (id) => {
         const idd = Number(id)
         console.log(id)
-        await axios.patch(`${SPRINGBOOT_API_URL}/streams/${idd}`)
+        await axios.patch(`${env.SPRINGBOOT_API_URL}/streams/${idd}`)
     }
 
     return (

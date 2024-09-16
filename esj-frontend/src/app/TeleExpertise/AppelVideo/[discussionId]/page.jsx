@@ -10,14 +10,13 @@ import Link from "next/link";
 import Image from "next/image";
 import FeatherIcon from "feather-icons-react/build/FeatherIcon";
 import { useWebSocket } from "@/hooks/useWebSocket";
-import axios from "axios";
 import { decodeToken } from "@/utils/docodeToken";
 import { endDiscussion, getDiscussion } from "@/services/discussionService";
 import { useRouter } from "next/navigation";
 import { PiMicrophoneFill, PiMicrophoneSlashFill } from "react-icons/pi";
 import { HiVideoCamera, HiVideoCameraSlash } from "react-icons/hi2";
 import toast from "react-hot-toast";
-import { getMedecinById } from "@/services/medecinService";
+import { useEnv } from "@/env/provider";
 
 const streamConstraints = { audio: true, video: true };
 
@@ -41,6 +40,7 @@ const iceServers = {
 
 
 export default function Test({ params }) {
+  const env = useEnv()
   const [readyTorRender, setReadyToRender] = useState(false)
   const router = useRouter()
   const { connect,isConnected, stompClient } = useWebSocket()
@@ -81,7 +81,7 @@ export default function Test({ params }) {
     setUserId(decodedToken.claims.id);
     async function fetchData() {
         try {
-            const res = await getDiscussion(token, params.discussionId);
+            const res = await getDiscussion(token, params.discussionId, env);
             setDiscussion(res)
             res.participants.forEach(p => {
               setParticipantsNames(prev => ({
@@ -425,7 +425,7 @@ export default function Test({ params }) {
       try {
         const token = localStorage.getItem("access-token");
   
-        await endDiscussion(token, params.discussionId);
+        await endDiscussion(token, params.discussionId, env);
   
         const payload = {
           type: "end",

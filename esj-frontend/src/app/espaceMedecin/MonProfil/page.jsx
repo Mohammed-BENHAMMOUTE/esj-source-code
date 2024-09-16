@@ -12,9 +12,10 @@ import "../../../assets/css/style.css";
 import { jwtDecode } from "jwt-decode";
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 const Page = () => {
+  const env = useEnv()
   const router = useRouter();
   const [medecin, setMedecin] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -36,7 +37,7 @@ const Page = () => {
 
   const getMedecinData = (id) => {
     if (id != null) {
-      axios.get(SPRINGBOOT_API_URL+'/medecins/' + id, {
+      axios.get(env.SPRINGBOOT_API_URL+'/medecins/' + id, {
       headers: {
         Authorization: `Bearer ${token}`
       }

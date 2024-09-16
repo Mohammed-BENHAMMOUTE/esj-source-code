@@ -8,10 +8,11 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import html2pdf from 'html2pdf.js';
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 const Page = ({ params }) => {
   const { GoogleGenerativeAI } = require("@google/generative-ai");
+  const env = useEnv()
   const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_API_KEY);
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
   const token = localStorage.getItem('access-token');
@@ -32,7 +33,7 @@ const Page = ({ params }) => {
   const [message, setMessage] = useState(null);
 
   const getDossierMedicalInformations = () => {
-    axios.get(SPRINGBOOT_API_URL+'/jeune/dossier-medical/' + params.id, {
+    axios.get(env.SPRINGBOOT_API_URL+'/jeune/dossier-medical/' + params.id, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

@@ -14,8 +14,10 @@ import { format } from "date-fns";
 import toast from "react-hot-toast";
 import pdfIcon from "@/assets/img/icons/pdf-icon.png";
 import docIcon from "@/assets/img/icons/doc-icon.png";
+import { useEnv } from "@/env/provider";
 
 const ChatMeeting = ({ params }) => {
+  const env = useEnv()
   const router = useRouter()
   const { connect, isConnected, stompClient } = useWebSocket()
   const [userId, setUserId] = useState()
@@ -77,7 +79,7 @@ const ChatMeeting = ({ params }) => {
         const decodedToken = decodeToken(token)
         setUserId(decodedToken.claims.id)
         await connect(token);
-        const res = await getDiscussion(token, params.discussionId);
+        const res = await getDiscussion(token, params.discussionId, env);
         setDiscussion(res)
         if (res.status !== "EN_COURS") {
           router.push("/TeleExpertise")
@@ -127,7 +129,7 @@ const ChatMeeting = ({ params }) => {
       try {
         const token = localStorage.getItem("access-token");
   
-        await endDiscussion(token, params.discussionId);
+        await endDiscussion(token, params.discussionId, env);
   
         sendEndedDiscussionMessage()
   

@@ -15,9 +15,10 @@ import {
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { SPRINGBOOT_API_URL } from '@/config';
+import { useEnv } from '@/env/provider';
 
 const Historique = ({ params }) => {
+  const env = useEnv()
   const [patient,setPatient] = useState(null);
   const [consultations, setConsultations] = useState([]);
   const [selectedConsultation, setSelectedConsultation] = useState(null);
@@ -30,7 +31,7 @@ const Historique = ({ params }) => {
     const fetchConsultations = async () => {
         const accessToken = localStorage.getItem('access-token');
         setDecodedAccessToken(jwtDecode(accessToken))
-        axios.get(SPRINGBOOT_API_URL+"/jeune/"+id, {
+        axios.get(env.SPRINGBOOT_API_URL+"/jeune/"+id, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

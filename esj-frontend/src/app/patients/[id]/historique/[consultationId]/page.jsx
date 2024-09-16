@@ -28,11 +28,12 @@ import Header from "@/components/espaceMedecin/Header";
 import NavigationHeader from "@/components/ppn/NavigationHeader";
 import TextAreaInput from "@/components/ppn/TextAreaInput";
 import TextInput from "@/components/ppn/TextInput";
-import { SPRINGBOOT_API_URL } from "@/config";
 import axios from 'axios';
+import { useEnv } from "@/env/provider";
 
 
 const modifierConsultation = ({params}) => {
+  const env = useEnv()
   const id = params.id
   const consultationId = params.consultationId;
   const pages = ["patients", id, "historique", consultationId];
@@ -73,7 +74,7 @@ const modifierConsultation = ({params}) => {
       if (consultationId) {
         setLoading(true);
         try {
-          const response = await axios.get(`${SPRINGBOOT_API_URL}/jeune/${id}`, {
+          const response = await axios.get(`${env.SPRINGBOOT_API_URL}/jeune/${id}`, {
             headers: {
               Authorization: `Bearer ${accessToken}`
             }
@@ -562,7 +563,7 @@ const modifierConsultation = ({params}) => {
 
     // HERE WHERE THE DATA IS BEEN SENT TO THE END POINT : /consultations/[consultationId]
     const res = await axios.put(
-      `${SPRINGBOOT_API_URL}/jeunes/${id}/consultations/${consultationId}`,
+      `${env.SPRINGBOOT_API_URL}/jeunes/${id}/consultations/${consultationId}`,
       consultationM, // This is the body (data being sent)
       {
         headers: {

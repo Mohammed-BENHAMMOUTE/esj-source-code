@@ -11,8 +11,10 @@ import DiscussionTerminee from "@/components/TeleExpertise/DiscussionTerminee";
 import Invitation from "@/components/TeleExpertise/Invitation";
 import Pagination from 'react-bootstrap/Pagination';
 import { getInvitations, getMyCreatedDiscussions, getPlanifiedDiscussions, getTerminedDiscussions } from "@/services/discussionService";
+import { useEnv } from "@/env/provider";
 
 const Discussions = () => {
+  const env = useEnv()
   const [discussionsCrees, setDiscussionsCrees] = useState()
   const [discussionsPlanifiees, setDiscussionsPlanifiees] = useState()
   const [discussionsTerminees, setDiscussionsTerminees] = useState()
@@ -21,10 +23,10 @@ const Discussions = () => {
   useEffect(() => {
     async function fetchData() {
       const token = localStorage.getItem("access-token")
-      setDiscussionsCrees((await getMyCreatedDiscussions(token)))
-      setDiscussionsPlanifiees((await getPlanifiedDiscussions(token)))
-      setDiscussionsTerminees((await getTerminedDiscussions(token)))
-      setInvitations(await getInvitations(token))
+      setDiscussionsCrees((await getMyCreatedDiscussions(token, null, env)))
+      setDiscussionsPlanifiees((await getPlanifiedDiscussions(token, null, env)))
+      setDiscussionsTerminees((await getTerminedDiscussions(token, null, env)))
+      setInvitations(await getInvitations(token, env))
     }
     fetchData()
   }, [])
@@ -32,17 +34,17 @@ const Discussions = () => {
 
   const handlePageChangeCreated = async (pageNumber) => {
     const token = localStorage.getItem("access-token")
-    setDiscussionsCrees((await getMyCreatedDiscussions(token, pageNumber)))
+    setDiscussionsCrees((await getMyCreatedDiscussions(token, pageNumber, env)))
   };
 
   const handlePageChangePlanified = async (pageNumber) => {
     const token = localStorage.getItem("access-token")
-    setDiscussionsPlanifiees((await getPlanifiedDiscussions(token, pageNumber)))
+    setDiscussionsPlanifiees((await getPlanifiedDiscussions(token, pageNumber, env)))
   };
 
   const handlePageChangeTermined = async (pageNumber) => {
     const token = localStorage.getItem("access-token")
-    setDiscussionsTerminees((await getTerminedDiscussions(token, pageNumber)))
+    setDiscussionsTerminees((await getTerminedDiscussions(token, pageNumber, env)))
   };
 
   return (

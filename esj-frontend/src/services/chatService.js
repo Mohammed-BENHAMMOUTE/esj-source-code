@@ -1,11 +1,10 @@
-import { SPRINGBOOT_API_URL } from "@/config";
 import axios from "axios";
 
 
 
-export const getMessages = async (token, senderId, recipientId) => {
+export const getMessages = async (token, senderId, recipientId, env) => {
     try {
-        const response = await axios.get(`${SPRINGBOOT_API_URL}/messages/${senderId}/${recipientId}`, {
+        const response = await axios.get(`${env.SPRINGBOOT_API_URL}/messages/${senderId}/${recipientId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

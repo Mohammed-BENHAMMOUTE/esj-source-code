@@ -14,9 +14,10 @@ import {
     FormMessage,
     FormDescription,
 } from "@/components/ui/form";
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 const Fields = ({ nextStep }) => {
+    const env = useEnv()
     const t = useTranslations("EmailRecovery");
 
     const schema = z.object({
@@ -34,7 +35,7 @@ const Fields = ({ nextStep }) => {
     const { errors } = formState;
 
     const onSubmit =async (data) => {
-        const response = await fetch(SPRINGBOOT_API_URL+'/validator/mail?mail='+data.email);
+        const response = await fetch(env.SPRINGBOOT_API_URL+'/validator/mail?mail='+data.email);
         if(!response.ok){
             form.setError("email",{
                 type: "manual",

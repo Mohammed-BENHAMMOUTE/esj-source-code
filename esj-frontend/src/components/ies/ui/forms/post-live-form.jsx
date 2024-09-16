@@ -12,7 +12,7 @@ import { jwtDecode } from "jwt-decode";
 import { getAlertifyInstance } from "../../utility/alertify-singleton";
 import axios from "axios";
 import Loading from "../../utility/loading";
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 const quality = [
     { value: 1, label: "★☆☆☆☆" },
@@ -28,7 +28,7 @@ const yesno = [
 ];
 
 const Post_Live_Form = ({ showDashboard }) => {
-
+    const env = useEnv()
     {/** TODO: Please check for input size control classes etc. */ }
     const [selectedRating, setSelectedRating] = useState(null);
     const [selectedRecommand, setSelectedRecommand] = useState(null);
@@ -88,7 +88,7 @@ const Post_Live_Form = ({ showDashboard }) => {
 
     const fetchLastLive = async (token, idJeune) => {
         try {
-            const response = await axios.get(`${SPRINGBOOT_API_URL}/jeunes/${idJeune}/streams/last`, {
+            const response = await axios.get(`${env.SPRINGBOOT_API_URL}/jeunes/${idJeune}/streams/last`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
@@ -99,7 +99,7 @@ const Post_Live_Form = ({ showDashboard }) => {
 
     const postFeedback = async (token, idJeune, lastLive, feedback) => {
         try {
-            await axios.post(`${SPRINGBOOT_API_URL}/jeunes/${idJeune}/streams/${lastLive.id}/feedbacks`, feedback, {
+            await axios.post(`${env.SPRINGBOOT_API_URL}/jeunes/${idJeune}/streams/${lastLive.id}/feedbacks`, feedback, {
                 headers: { Authorization: `Bearer ${token}` }
             });
         } catch (error) {

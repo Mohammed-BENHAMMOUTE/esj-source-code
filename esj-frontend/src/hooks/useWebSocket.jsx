@@ -1,22 +1,23 @@
 import { useState } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
-import { SPRING_SOCKET, SPRINGBOOT_API_URL } from '@/config';
+import { useEnv } from '@/env/provider';
 
 export const useWebSocket = () => {
   const [stompClient, setStompClient] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+  const env = useEnv()
 
   const connect = (token) => {
     return new Promise((resolve, reject) => {
       const client = new Client({
-        brokerURL: `${SPRING_SOCKET}/ws?token=${token}`,
+        brokerURL: `${env.SPRING_SOCKET}/ws?token=${token}`,
         connectHeaders: {},
         debug: (str) => console.log(str),
         reconnectDelay: 5000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
-        webSocketFactory: () => new SockJS(`${SPRINGBOOT_API_URL}/ws?token=${token}`),
+        webSocketFactory: () => new SockJS(`${env.SPRINGBOOT_API_URL}/ws?token=${token}`),
         onConnect: () => {
           setIsConnected(true);
           setStompClient(client);

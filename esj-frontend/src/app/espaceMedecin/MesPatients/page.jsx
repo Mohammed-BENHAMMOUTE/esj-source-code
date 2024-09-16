@@ -10,9 +10,10 @@ import axios from 'axios';
 import { refreshicon, searchnormal } from '../../../components/espaceMedecin/imagepath';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from "jwt-decode";
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 const MesPatients = () => {
+  const env = useEnv()
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
   const [data, setData] = useState(null);
@@ -20,7 +21,7 @@ const MesPatients = () => {
   const [user, setUser] = useState(null);
 
   const getAllJeunes = (medecinId) => {
-    axios.get(`${SPRINGBOOT_API_URL}/jeune/medecin/${medecinId}`,  {
+    axios.get(`${env.SPRINGBOOT_API_URL}/jeune/medecin/${medecinId}`,  {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -43,7 +44,7 @@ const MesPatients = () => {
   const updateFavoriteState = async (jeuneId, favorite) => {
     try {
         await axios.put(
-            `${SPRINGBOOT_API_URL}/jeune/favorite/${jeuneId}/${favorite}`,
+            `${env.SPRINGBOOT_API_URL}/jeune/favorite/${jeuneId}/${favorite}`,
             {},
             {
                 headers: {

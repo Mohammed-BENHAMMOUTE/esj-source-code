@@ -8,9 +8,10 @@ import { logo, baricon, baricon1, user06 } from "./imagepath";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import axios from 'axios';
-import { SPRINGBOOT_API_URL } from "@/config";
+import { useEnv } from "@/env/provider";
 
 const Header = ({section}) => {
+  const env = useEnv()
   const router = useRouter();
   const [user, setUser] = useState({});
   const [medecin, setMedecin] = useState(null);
@@ -36,7 +37,7 @@ const Header = ({section}) => {
   const getMedecinData = (id) => {
     const token1 = localStorage.getItem('access-token');
     if (id != null) {
-      axios.get(SPRINGBOOT_API_URL+'/medecins/' + id, {
+      axios.get(env.SPRINGBOOT_API_URL+'/medecins/' + id, {
       headers: {
         Authorization: `Bearer ${token1}`
       }

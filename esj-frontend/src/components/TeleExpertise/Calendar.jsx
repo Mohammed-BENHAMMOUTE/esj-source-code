@@ -9,8 +9,10 @@ import interactionPlugin from "@fullcalendar/interaction";
 import Sidebar from "@/components/TeleExpertise/Sidebar";
 import FeatherIcon from "feather-icons-react/build/FeatherIcon";
 import { getDiscussionsByMonth } from "@/services/discussionService";
+import { useEnv } from "@/env/provider";
 
 const Calender = () => {
+  const env = useEnv()
   const calendarRef = useRef(null);
   const [discussions, setDiscussions] = useState([]);
   const [ready, setReady] = useState(false);
@@ -23,7 +25,7 @@ const Calender = () => {
     
     const token = localStorage.getItem("access-token");
     try {
-      const res = await getDiscussionsByMonth(token, month, year);
+      const res = await getDiscussionsByMonth(token, month, year, env);
       setDiscussions(res.map(d => ({
         ...d,
         title: d.titre,
@@ -45,7 +47,7 @@ const Calender = () => {
       const year = today.getFullYear();
       
       try {
-        const res = await getDiscussionsByMonth(token, month, year);
+        const res = await getDiscussionsByMonth(token, month, year, env);
         setDiscussions(res.map(d => ({
           ...d,
           title: d.titre,

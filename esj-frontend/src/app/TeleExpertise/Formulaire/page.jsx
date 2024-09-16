@@ -13,8 +13,10 @@ import { decodeToken } from "@/utils/docodeToken";
 import { createDiscussion } from "@/services/discussionService";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useEnv } from "@/env/provider";
 
 const Formulaire = () => {
+  const env = useEnv()
   const router = useRouter()
   const [isConsentChecked, setIsConsentChecked] = useState(false);
   const [date, setDate] = useState(null);
@@ -285,7 +287,7 @@ const Formulaire = () => {
   const handleCreateDiscussion = async () => {
     const token = localStorage.getItem("access-token")
     try {
-      const res = await createDiscussion(token, discussion)
+      const res = await createDiscussion(token, discussion, env)
       await handleUpload(res.id)
       toast.success("La discussion est bien créé")
       router.push("/TeleExpertise/Discussions")
