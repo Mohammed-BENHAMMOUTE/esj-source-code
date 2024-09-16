@@ -17,6 +17,7 @@ services:
     build:
       context: ./esj-backend
       dockerfile: dockerfile
+    container_name: esj-backend
     ports:
       - "8080:8080"
     environment:
@@ -30,15 +31,27 @@ services:
     build:
       context: ./esj-frontend
       dockerfile: Dockerfile
+    container_name: esj-frontend
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_SPRINGBOOT_API_URL: http://localhost:8080
-      NEXT_PUBLIC_SPRING_SOCKET: ws://localhost:8080
-      NEXT_PUBLIC_FLASK_API_URL: http://localhost:5000
-      NEXT_PUBLIC_EXPRESS_API_URL: http://localhost:7777
+      NEXT_PUBLIC_SPRINGBOOT_API_URL: https://${IP_ADDRESS}:8443
+      NEXT_PUBLIC_SPRING_SOCKET: wss://${IP_ADDRESS}:8443
+      NEXT_PUBLIC_FLASK_API_URL: http://${IP_ADDRESS}:5000
+      NEXT_PUBLIC_EXPRESS_API_URL: http://${IP_ADDRESS}:7777
     depends_on:
       - esj-backend
+  
+  nginx:
+    build: ./nginx
+    container_name: nginx-proxy
+    depends_on:
+      - esj-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./ssl:/etc/nginx/ssl
 
   zoo11:
     image: confluentinc/cp-zookeeper:latest
