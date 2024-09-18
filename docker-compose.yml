@@ -19,7 +19,7 @@ services:
       dockerfile: dockerfile
     container_name: esj-backend
     ports:
-      - "8080:8080"
+      - "8443:8443"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/your-database-name
       SPRING_DATASOURCE_USERNAME: your-username
