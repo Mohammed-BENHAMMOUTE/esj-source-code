@@ -14,5 +14,6 @@
 
 ```
 IP_ADDRESS=192.168.11.107 docker compose up --build -d
-keytool -genkeypair -alias myAlias -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore keystore.p12 -validity 3650
+keytool -genkeypair -alias myAlias -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore keystore.p12 -validity 3650 -dname "CN=192.168.11.107, OU=MyOrg, O=MyCompany, L=MyCity, ST=MyState, C=US"
+keytool -export -alias myAlias -keystore keystore.p12 -file backend-cert.crt
 ```
