@@ -3,9 +3,12 @@ package ma.inpt.esj.services;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import ma.inpt.esj.entities.*;
 import ma.inpt.esj.exception.*;
 import ma.inpt.esj.repositories.*;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -15,16 +18,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ConfirmeMailServiceImpl implements ConfirmeMailService {
     private static final long EXPIRATION_TIME_MS = 60 * 60 * 1000;
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
-    private MedecinRepository medecinRepository;
-    private ProfessionnelRepository professionnelSanteRepository;
-    private JeuneRepository jeuneRepo;
-    private AdministrateurRepository adminRepo;
-    private ConfirmationTokenRepository confirmationTokenRepository;
+    private final MedecinRepository medecinRepository;
+    private final ProfessionnelRepository professionnelSanteRepository;
+    private final JeuneRepository jeuneRepo;
+    private final AdministrateurRepository adminRepo;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
+
+    @Value("${ip.address.backend}")
+    private String ipAdressBackend;
+
     @Override
     public void sendEmail(String to, String subject, String htmlBody) {
         MimeMessage message = mailSender.createMimeMessage();
@@ -81,7 +88,7 @@ public class ConfirmeMailServiceImpl implements ConfirmeMailService {
 
     @Override
     public void sendConfirmationEmail(String to, String token) {
-        String confirmationUrl = "http://localhost:8080/register/confirmation?token=" + token;
+        String confirmationUrl = ipAdressBackend + "/register/confirmation?token=" + token;
         String subject = "Email Confirmation";
         String htmlBody = "<p>Please confirm your email by clicking the following link:</p>"
                 + "<p><a href=\"" + confirmationUrl + "\">Confirm Email</a></p>";

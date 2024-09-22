@@ -1,3 +1,4 @@
+import { useEnv } from "@/env/provider";
 import { joinOuverteDiscussion } from "@/services/discussionService";
 import { set } from "date-fns";
 import Image from "next/image";
@@ -16,6 +17,7 @@ const Discussion = ({
   time,
   setDiscussions
 }) => {
+  const env = useEnv()
   const getInitials = (name) => {
     return name.charAt(0);
   };
@@ -23,7 +25,7 @@ const Discussion = ({
   const handleJoinDiscussion = async () => {
     try {
       const token = localStorage.getItem("access-token")
-      await joinOuverteDiscussion(token, id)
+      await joinOuverteDiscussion(token, id, env)
       toast.success("Vous avez rejoint la discussion")
       setDiscussions((prevDiscussions) =>
         prevDiscussions.filter((discussion) => discussion.id !== id)

@@ -2,6 +2,7 @@ package ma.inpt.esj.controllers;
 
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import ma.inpt.esj.entities.Administrateur;
 import ma.inpt.esj.entities.Jeune;
 import ma.inpt.esj.entities.Medecin;
@@ -9,30 +10,33 @@ import ma.inpt.esj.entities.ProfessionnelSante;
 import ma.inpt.esj.exception.*;
 import ma.inpt.esj.services.ConfirmeMailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
-@AllArgsConstructor
 public class ConfirmationMailController {
     @Autowired
     private ConfirmeMailService confirmeMailService;
+
+    @Value("${ip.address.frontend}")
+    private String ipAdressFrontend;
 
     @GetMapping("/register/confirmation")
     public RedirectView confirmEmail(@RequestParam("token") String token) throws ConfirmationMailException {
         Object person = confirmeMailService.confirmEmail(token);
 
         if (person instanceof Medecin) {
-            return new RedirectView("http://localhost:3000/auth/medecins");
+            return new RedirectView(ipAdressFrontend +"/auth/medecins");
         } else if (person instanceof ProfessionnelSante) {
-            return new RedirectView("http://localhost:3000/auth/professionnels");
+            return new RedirectView(ipAdressFrontend +"/auth/professionnels");
 
         } else if (person instanceof Jeune) {
-            return new RedirectView("http://localhost:3000/auth/jeunes");
+            return new RedirectView(ipAdressFrontend +"/auth/jeunes");
         } else if (person instanceof Administrateur) {
-            return new RedirectView("http://localhost:3000/auth/administrateur");
+            return new RedirectView(ipAdressFrontend +"/auth/administrateur");
         } else {
             throw new ConfirmationMailException("Unknown person type");
         }

@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import Image from "next/image";
 import React from "react";
 import toast from "react-hot-toast";
+import { useEnv } from "@/env/provider";
 
 const Invitation = ({
   invitationId,
@@ -16,6 +17,7 @@ const Invitation = ({
   setInvitations
 
 }) => {
+  const env = useEnv()
 
   const getInitials = (name) => {
     return name.charAt(0);
@@ -24,7 +26,7 @@ const Invitation = ({
   const accepterInvitation = async () => {
     try {
       const token = localStorage.getItem("access-token")
-      await acceptInvitation(token, invitationId)
+      await acceptInvitation(token, invitationId, env)
       setInvitations((prevInvitations) =>
         prevInvitations.filter((invitation) => invitation.id !== invitationId)
       );
@@ -38,7 +40,7 @@ const Invitation = ({
   const refuserInvitation = async () => {
     try {
       const token = localStorage.getItem("access-token")
-      await declineInvitation(token, invitationId)
+      await declineInvitation(token, invitationId, env)
       setInvitations((prevInvitations) =>
         prevInvitations.filter((invitation) => invitation.id !== invitationId)
       );
