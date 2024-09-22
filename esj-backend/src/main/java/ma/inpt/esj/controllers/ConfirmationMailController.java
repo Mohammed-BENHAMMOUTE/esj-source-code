@@ -1,8 +1,6 @@
 package ma.inpt.esj.controllers;
 
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import ma.inpt.esj.entities.Administrateur;
 import ma.inpt.esj.entities.Jeune;
 import ma.inpt.esj.entities.Medecin;

@@ -2,7 +2,6 @@ package ma.inpt.esj.services;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import ma.inpt.esj.entities.*;
 import ma.inpt.esj.exception.*;
