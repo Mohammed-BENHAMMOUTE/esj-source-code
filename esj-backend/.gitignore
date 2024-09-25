@@ -34,3 +34,4 @@ build/
 
 ### Local Configuration ###
 .env
+./src/main/resources/keystore.p12

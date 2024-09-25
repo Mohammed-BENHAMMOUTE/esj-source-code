@@ -1,7 +1,9 @@
 package ma.inpt.esj.securityConfig;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -30,12 +32,15 @@ import java.util.List;
 @Configuration
 //@EnableWebSecurity
 //@EnableMethodSecurity(prePostEnabled = true)
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
-    MedecinDetailsService medecinDetailsService;
-    ProfessionelSanteDetailsService professionelSanteDetailsService;
-    JeuneDetailsService jeuneDetailsService;
-    AdminDetailsService adminDetailsService;
+    private final MedecinDetailsService medecinDetailsService;
+    private final ProfessionelSanteDetailsService professionelSanteDetailsService;
+    private final JeuneDetailsService jeuneDetailsService;
+    private final AdminDetailsService adminDetailsService;
+
+    @Value("${ip.address.frontend}")
+    private String ipAdressFrontend;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -127,7 +132,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("https://192.168.11.107");  // Allow requests from your frontend
+        corsConfiguration.addAllowedOrigin(ipAdressFrontend);  // Allow requests from your frontend
         corsConfiguration.addAllowedMethod("GET");
         corsConfiguration.addAllowedMethod("POST");
         corsConfiguration.addAllowedMethod("PUT");
