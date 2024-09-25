@@ -8,10 +8,9 @@ Follow these steps to run the application.
    - Find and note your local IP address, such as `192.168.0.3`.
    - Create an empty `ssl` folder under the project directory.
    - Run the following command to generate SSL certificates for the frontend (nginx):
-   
-    ```
-    mkdir ssl && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/private_key.pem -out ssl/certificate.pem -subj "//C=US//ST=California//L=San Francisco//O=MyOrganization//OU=MyDepartment//CN=<YOUR_LOCAL_IP>"
-    ```
+   ```bash
+   mkdir ssl && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/private_key.pem -out ssl/certificate.pem -subj "//C=US//ST=California//L=San Francisco//O=MyOrganization//OU=MyDepartment//CN=<YOUR_LOCAL_IP>"
+   ```
 
    Replace `<YOUR_LOCAL_IP>` with your actual IP address.
 
@@ -24,7 +23,7 @@ Follow these steps to run the application.
 
    Run the following command to generate a certificate for the backend:
 
-   ```
+   ```bash
    keytool -genkeypair -alias myAlias -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore ./esj-backend/src/main/resources/keystore.p12 -validity 3650 -dname "CN=<YOUR_LOCAL_IP>, OU=MyOrg, O=MyCompany, L=MyCity, ST=MyState, C=US"
    ```
 
