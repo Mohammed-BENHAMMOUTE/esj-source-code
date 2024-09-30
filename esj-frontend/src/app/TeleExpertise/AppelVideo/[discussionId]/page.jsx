@@ -722,7 +722,7 @@ export default function Test({ params }) {
                   )}
                 </button>
               </div>
-              <div style={{ marginTop: '10px', textAlign: 'center' }}>
+              {/*<div style={{ marginTop: '10px', textAlign: 'center' }}>
                 <p style={{marginBottom: "5px"}}>
                   Si la visioconférence ne se charge pas ou présente des problèmes, essayez de la recharger.
                 </p>
@@ -736,7 +736,7 @@ export default function Test({ params }) {
                 }}>
                   Recharger
                 </button>
-              </div>
+              </div>*/}
             </div>
               
           </div>
