@@ -14,31 +14,46 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   esj-backend:
-    image: aharoud/esj-backend:1.0.0
+    build:
+      context: ./esj-backend
+      dockerfile: dockerfile
     container_name: esj-backend
     ports:
-      - "8080:8080"
+      - "8443:8443"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/your-database-name
       SPRING_DATASOURCE_USERNAME: your-username
       SPRING_DATASOURCE_PASSWORD: your-password
+      IP_ADDRESS_BACKEND: https://${IP_ADDRESS}:8443
+      IP_ADDRESS_FRONTEND: https://${IP_ADDRESS}
     depends_on:
       - postgres
 
   esj-frontend:
-    image: aharoud/esj-frontend:1.0.0
+    build:
+      context: ./esj-frontend
+      dockerfile: Dockerfile
     container_name: esj-frontend
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_SPRINGBOOT_API_URL: http://localhost:8080
-      NEXT_PUBLIC_SPRING_SOCKET: ws://localhost:8080
-      NEXT_PUBLIC_FLASK_API_URL: http://localhost:5000
-      NEXT_PUBLIC_EXPRESS_API_URL: http://localhost:7777
+      NEXT_PUBLIC_SPRINGBOOT_API_URL: https://${IP_ADDRESS}:8443
+      NEXT_PUBLIC_SPRING_SOCKET: wss://${IP_ADDRESS}:8443
+      NEXT_PUBLIC_FLASK_API_URL: http://${IP_ADDRESS}:5000
+      NEXT_PUBLIC_EXPRESS_API_URL: http://${IP_ADDRESS}:7777
     depends_on:
       - esj-backend
-      - express-server
   
+  nginx:
+    build: ./nginx
+    container_name: nginx-proxy
+    depends_on:
+      - esj-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./ssl:/etc/nginx/ssl
 
   express-server:
     build:
@@ -48,12 +63,13 @@ services:
     volumes:
       - .:/usr/src/app
     environment:
-      IP_ADDRESS_FRONTEND: http://localhost:3000
-      URL: http://localhost:7777
+      IP_ADDRESS_FRONTEND: https://${IP_ADDRESS}
+      URL: http://${IP_ADDRESS}:7777
       API_KEY: 
     ports:
       - "7777:7777"
-
+    depends_on:
+      - nginx
 
   zoo11:
     image: confluentinc/cp-zookeeper:latest

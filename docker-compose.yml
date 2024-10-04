@@ -1,59 +1,54 @@
-version: '3.1'
+version: '3'
 
 services:
+  
   postgres:
-    image: postgres:latest
-    restart: always
+    build:
+      context: ./Chatbot-Flask-Backend/
+      dockerfile: Dockerfile.postgres
     environment:
-      POSTGRES_USER: your-username
-      POSTGRES_PASSWORD: your-password
-      POSTGRES_DB: your-database-name
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./Chatbot-Flask-Backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+  
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 
   esj-backend:
-    build:
-      context: ./esj-backend
-      dockerfile: dockerfile
+    image: aharoud/esj-backend:1.0.0
     container_name: esj-backend
     ports:
-      - "8443:8443"
+      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/your-database-name
       SPRING_DATASOURCE_USERNAME: your-username
       SPRING_DATASOURCE_PASSWORD: your-password
-      IP_ADDRESS_BACKEND: https://${IP_ADDRESS}:8443
-      IP_ADDRESS_FRONTEND: https://${IP_ADDRESS}
     depends_on:
       - postgres
 
   esj-frontend:
-    build:
-      context: ./esj-frontend
-      dockerfile: Dockerfile
+    image: aharoud/esj-frontend:1.0.0
     container_name: esj-frontend
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_SPRINGBOOT_API_URL: https://${IP_ADDRESS}:8443
-      NEXT_PUBLIC_SPRING_SOCKET: wss://${IP_ADDRESS}:8443
-      NEXT_PUBLIC_FLASK_API_URL: http://${IP_ADDRESS}:5000
-      NEXT_PUBLIC_EXPRESS_API_URL: http://${IP_ADDRESS}:7777
+      NEXT_PUBLIC_SPRINGBOOT_API_URL: http://localhost:8080
+      NEXT_PUBLIC_SPRING_SOCKET: ws://localhost:8080
+      NEXT_PUBLIC_FLASK_API_URL: http://localhost:5000
+      NEXT_PUBLIC_EXPRESS_API_URL: http://localhost:7777
     depends_on:
       - esj-backend
+      - express-server
   
-  nginx:
-    build: ./nginx
-    container_name: nginx-proxy
-    depends_on:
-      - esj-frontend
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./ssl:/etc/nginx/ssl
 
   express-server:
     build:
@@ -63,13 +58,37 @@ services:
     volumes:
       - .:/usr/src/app
     environment:
-      IP_ADDRESS_FRONTEND: https://${IP_ADDRESS}
-      URL: http://${IP_ADDRESS}:7777
+      IP_ADDRESS_FRONTEND: http://localhost:3000
+      URL: http://localhost:7777
       API_KEY: 
     ports:
       - "7777:7777"
+
+  esj-chatbot:
+    build: ./Chatbot-Flask-Backend
+    ports:
+      - "5000:5000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PG_CONNECTION_STRING=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - PDF_FOLDER_PATH=${PDF_FOLDER_PATH}
+      - FLASK_ENV=${FLASK_ENV}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+      - FLASK_DEBUG=${FLASK_DEBUG}
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - CLIENT_SECRETS_FILE=/app/${CLIENT_SECRETS_FILE}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - GOOGLE_DRIVE_FOLDER_ID=${GOOGLE_DRIVE_FOLDER_ID}
     depends_on:
-      - nginx
+      kafka11:
+        condition: service_started
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+    command: sh -c "gunicorn --bind 0.0.0.0:5000 app:app & python scheduler.py"
 
   zoo11:
     image: confluentinc/cp-zookeeper:latest
@@ -109,3 +128,4 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
