@@ -51,8 +51,7 @@ const Professional_Dashboard = () => {
             const questions = LiveSelected.questions.length > 0 ? LiveSelected.questions : null;
 
             if ((questions !== null) && (questions !== undefined)) {
-                const response = await axios.post(
-                    env.EXPRESS_API_URL+'/summarized_questions',
+                const response = await axios.post('/api/summarized_questions',
                     { questions },
                     {
                         headers: {
@@ -61,7 +60,7 @@ const Professional_Dashboard = () => {
                     }
                 );
 
-                const responseData = response.data.replace(/```json|```/g, '').split(" - ");
+                const responseData = response.data.summary.replace(/```json|```/g, '').split(" - ");
                 setquestionreceive(responseData)
             }
         } catch (error) {

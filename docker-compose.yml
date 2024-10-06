@@ -6,6 +6,7 @@ services:
     build:
       context: ./Chatbot-Flask-Backend/
       dockerfile: Dockerfile.postgres
+    container_name: postgresDB
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -36,7 +37,8 @@ services:
       - postgres
 
   esj-frontend:
-    image: aharoud/esj-frontend:1.0.0
+    #image: aharoud/esj-frontend:1.0.0
+    build: ./esj-frontend
     container_name: esj-frontend
     ports:
       - "3000:3000"
@@ -44,28 +46,30 @@ services:
       NEXT_PUBLIC_SPRINGBOOT_API_URL: http://localhost:8080
       NEXT_PUBLIC_SPRING_SOCKET: ws://localhost:8080
       NEXT_PUBLIC_FLASK_API_URL: http://localhost:5000
-      NEXT_PUBLIC_EXPRESS_API_URL: http://localhost:7777
+      #NEXT_PUBLIC_EXPRESS_API_URL: http://localhost:7777
+      JWT_SECRET: ${JWT_SECRET_KEY}
+      GOOGLE_AI_API_KEY: ${GEMENI_API_KEY}
     depends_on:
       - esj-backend
-      - express-server
+    #  - express-server
   
 
-  express-server:
-    build:
-      context: ./esj-express-server
-      dockerfile: dockerfile
-    container_name: esj-express-server
-    volumes:
-      - .:/usr/src/app
-    environment:
-      IP_ADDRESS_FRONTEND: http://localhost:3000
-      URL: http://localhost:7777
-      API_KEY: 
-    ports:
-      - "7777:7777"
+  #express-server:
+  #  build:
+  #    context: ./esj-express-server
+  #    dockerfile: dockerfile
+  #  image: aharoud/esj-express-server
+  #  container_name: esj-express-server
+  #  environment:
+  #    IP_ADDRESS_FRONTEND: http://localhost:3000
+  #    URL: http://localhost:7777
+  #    API_KEY: ${GEMENI_API_KEY}
+  # ports:
+  #    - "7777:7777"
 
   esj-chatbot:
     build: ./Chatbot-Flask-Backend
+    container_name: esj-chatbot
     ports:
       - "5000:5000"
     environment:

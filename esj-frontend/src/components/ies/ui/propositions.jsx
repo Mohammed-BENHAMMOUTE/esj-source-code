@@ -105,7 +105,6 @@ const Propositions = ({ toDashboard }) => {
                     }
                 });
                 const lives = allLives.data.slice(-7);
-
                 const fetchSuggestedThemes = async () => {
                     const themesPromises = lives.map(async (live) => {
                         try {
@@ -125,16 +124,15 @@ const Propositions = ({ toDashboard }) => {
                 };
 
                 const themesResults = await fetchSuggestedThemes();
-
                 try {
                     const topics = themesResults
                         ?.map(item => item.themes.filter(theme => theme.length > 0))
                         .filter(topic => topic.length > 0);
                     null;
 
-                    if (topics !== null && topics !== undefined) {
-                        const response = await axios.post(
-                            env.EXPRESS_API_URL+'/summarized_topics',
+                    if (topics !== null && topics !== undefined && topics.length > 0) {
+                    
+                        const response = await axios.post('/api/summarized_topics',
                             { topics },
                             {
                                 headers: {
@@ -144,7 +142,7 @@ const Propositions = ({ toDashboard }) => {
                             }
                         );
 
-                        const responseData = response.data.replace(/```json|```/g, '');
+                        const responseData = response.data.summary.replace(/```json|```/g, '');
                         setData(JSON.parse(responseData));
                     }
                     setDataFetched(true);

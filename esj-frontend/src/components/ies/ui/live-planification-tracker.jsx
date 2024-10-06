@@ -60,9 +60,21 @@ const Live_Planification_Tracker = ({ showModifyLivePlanification, setStatus, is
                 const id = decodedToken.claims.id;
 
                 if (isItForAdmin) {
-                    const response1 = await axios(`${env.SPRINGBOOT_API_URL}/admins/${id}/streams?phase=notactivated`)
-                    const response2 = await axios(`${env.SPRINGBOOT_API_URL}/admins/${id}/streams?phase=question`)
-                    const response3 = await axios(`${env.SPRINGBOOT_API_URL}/admins/${id}/streams?phase=final`)
+                    const response1 = await axios(`${env.SPRINGBOOT_API_URL}/admins/${id}/streams?phase=notactivated`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    const response2 = await axios(`${env.SPRINGBOOT_API_URL}/admins/${id}/streams?phase=question`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    const response3 = await axios(`${env.SPRINGBOOT_API_URL}/admins/${id}/streams?phase=final`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
                     const phase1 = await response1.data;
                     const phase2 = await response2.data;
                     const phase3 = await response3.data;
@@ -70,8 +82,16 @@ const Live_Planification_Tracker = ({ showModifyLivePlanification, setStatus, is
                     setQuestionPhase(sortByDate(phase2));
                     setFinalPhase(sortByDate(phase3));
                 } else {
-                    const response1 = await axios(`${env.SPRINGBOOT_API_URL}/jeunes/${id}/streams?phase=question`)
-                    const response2 = await axios(`${env.SPRINGBOOT_API_URL}/jeunes/${id}/streams?phase=final`)
+                    const response1 = await axios(`${env.SPRINGBOOT_API_URL}/jeunes/${id}/streams?phase=question`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    const response2 = await axios(`${env.SPRINGBOOT_API_URL}/jeunes/${id}/streams?phase=final`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
                     const phase1 = await response1.data;
                     const phase2 = await response2.data;
                     setQuestionPhase(sortByDate(phase1));

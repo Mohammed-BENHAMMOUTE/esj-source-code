@@ -12,12 +12,26 @@ const List_Lives = ({ toDashboard }) => {
   const [livePrecedents, setlivePrecedents] = useState([]);
   const [visibleLives, setVisibleLives] = useState([]);
   const [liveLoaded, setLivesLoaded] = useState(false);
+  const [itemsToShow, setItemsToShow] = useState(0)
 
   const fetcholdlives = async () => {
     // A optimiser: encore même problème
-    const datalive = await axios(`${env.SPRINGBOOT_API_URL}/streams?phase=outdated`);
-    setlivePrecedents(datalive.data);
-    setLivesLoaded(true);
+    try {
+      const token = localStorage.getItem("access-token");
+      console.log(token)
+      const datalive = await axios(`${env.SPRINGBOOT_API_URL}/streams?phase=outdated`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+      });
+
+      setlivePrecedents(datalive.data);
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLivesLoaded(true);
+    }
+    
   };
 
   useEffect(() => {

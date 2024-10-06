@@ -77,8 +77,7 @@ const Stats_Page = () => {
                     const long_comments = stats?.opinions.length > 0 ? stats?.opinions : null;
 
                     if ((long_comments !== null) && (long_comments !== undefined)) {
-                        const response = await axios.post(
-                            env.EXPRESS_API_URL+'/summarized_long_comments',
+                        const response = await axios.post('/api/summarized_long_comments',
                             { long_comments },
                             {
                                 headers: {
@@ -88,7 +87,7 @@ const Stats_Page = () => {
                             }
                         );
 
-                        const responseData = response.data.replace(/```json|```/g, '');
+                        const responseData = response.data.summary.replace(/```json|```/g, '');
                         setOpinion(responseData);
                     }
                 } catch (error) {
