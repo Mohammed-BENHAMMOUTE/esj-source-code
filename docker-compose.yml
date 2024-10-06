@@ -85,6 +85,8 @@ services:
       - REDIS_PORT=6379
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - GOOGLE_DRIVE_FOLDER_ID=${GOOGLE_DRIVE_FOLDER_ID}
+      - PATIENT_UPDATES_TOPIC=${PATIENT_UPDATES_TOPIC}
+      - REPORTS_TOPIC=${REPORTS_TOPIC}
     depends_on:
       kafka11:
         condition: service_started
