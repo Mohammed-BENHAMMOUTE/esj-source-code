@@ -268,6 +268,7 @@ def process_patient_messages():
     consumer = create_kafka_consumer("patient_updates")
     for message in consumer:
         try:
+            logger.error(f"Received message: {message.value}")
             upsert_patient_embedding(message.value)
             consumer.commit()
         except pybreaker.CircuitBreakerError as e:

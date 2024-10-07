@@ -25,7 +25,7 @@ services:
       - redis_data:/data
 
   esj-backend:
-    image: aharoud/esj-backend:1.0.0
+    image: aharoud/esj-backend:1.0.1
     container_name: esj-backend
     ports:
       - "8080:8080"
@@ -33,6 +33,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      KAFKA_BOOTSTRAP_SERVERS: kafka11:19092
+      TOPIC_NAME: ${PATIENT_UPDATES_TOPIC}
     depends_on:
       - postgres
 
@@ -79,7 +81,7 @@ services:
       - FLASK_ENV=${FLASK_ENV}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
       - FLASK_DEBUG=${FLASK_DEBUG}
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka11:19092
       - CLIENT_SECRETS_FILE=/app/${CLIENT_SECRETS_FILE}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
