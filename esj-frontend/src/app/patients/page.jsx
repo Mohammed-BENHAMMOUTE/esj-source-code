@@ -22,6 +22,25 @@ const Patients = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const path = usePathname();
 
+  useEffect(() => {
+    const fetchAllPatients = async () => {
+      try {
+        const accessToken = localStorage.getItem('access-token');
+        const response = await axios.get(`${env.SPRINGBOOT_API_URL}/jeunes`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setPatients(response.data);
+      } catch (error) {
+        console.error("Error fetching patients:", error);
+      }
+    };
+
+    fetchAllPatients();
+  }, [env.SPRINGBOOT_API_URL]);
+
+
   const fetchPatients = async (query) => {
     if (query.trim()) {
       const accessToken = localStorage.getItem('access-token');

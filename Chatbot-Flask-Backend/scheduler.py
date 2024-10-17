@@ -13,6 +13,7 @@ def run_process_pdfs():
 if __name__ == "__main__":
     scheduler = BlockingScheduler()
 
+    # Schedule the job to run every day at 3:00 AM
     scheduler.add_job(run_process_pdfs, 'cron', hour=3, minute=0)
 
     print("Scheduler starting...")

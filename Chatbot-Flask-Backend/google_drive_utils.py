@@ -23,8 +23,10 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Update scope to allow managing Drive files
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
+# Path to your service account JSON key file
 SERVICE_ACCOUNT_FILE = os.getenv("CLIENT_SECRETS_FILE")
 FOLDER_ID = os.getenv("GOOGLE_DRIVE_FOLDER_ID")
 
@@ -75,6 +77,7 @@ def list_unprocessed_pdf_files(drive_service):
     for file in all_files:
         logger.info(f"File: {file['name']}, Type: {file['mimeType']}")
 
+    # Now, let's check for PDF files
     pdf_query = f"'{FOLDER_ID}' in parents and mimeType='application/pdf'"
     pdf_results = drive_service.files().list(
         q=pdf_query,
@@ -84,6 +87,7 @@ def list_unprocessed_pdf_files(drive_service):
     pdf_files = pdf_results.get('files', [])
     logger.info(f"PDF files found in folder: {len(pdf_files)}")
 
+    # Finally, let's check for unprocessed PDF files
     unprocessed_query = f"'{FOLDER_ID}' in parents and mimeType='application/pdf' and not name contains 'processed_'"
     unprocessed_results = drive_service.files().list(
         q=unprocessed_query,
