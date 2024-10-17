@@ -55,20 +55,6 @@ services:
       - esj-backend
     #  - express-server
   
-
-  #express-server:
-  #  build:
-  #    context: ./esj-express-server
-  #    dockerfile: dockerfile
-  #  image: aharoud/esj-express-server
-  #  container_name: esj-express-server
-  #  environment:
-  #    IP_ADDRESS_FRONTEND: http://localhost:3000
-  #    URL: http://localhost:7777
-  #    API_KEY: ${GEMENI_API_KEY}
-  # ports:
-  #    - "7777:7777"
-
   esj-chatbot:
     build: ./Chatbot-Flask-Backend
     container_name: esj-chatbot
